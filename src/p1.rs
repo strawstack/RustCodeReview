@@ -9,8 +9,8 @@ type EffectivePower = i32;
 type Initiative = i32;
 type Damage = i32;
 
-const d : bool = false;
-const d2 : bool = false;
+const D : bool = false;
+const D2 : bool = false;
 
 #[allow(dead_code)]
 #[derive(Debug)]
@@ -69,7 +69,7 @@ impl Group {
         let damage = self.calculate_damage(other);
         let units_lost = min(other.units, damage / other.health);
         let remaining_units = max(0, other.units - units_lost);
-        if d {
+        if D {
             println!("{} group {} attacks defending group {}, killing {} units", 
                 if self.army == Army::Immune {"Immune"} else {"Infection"}, self.id + 1, other.id + 1, units_lost);
         }
@@ -233,7 +233,7 @@ fn target_selection_phase(
                     continue;
                 }
                 let damage = current_group.calculate_damage(other_group);
-                if d {
+                if D {
                     println!("{} group {} would deal defending group {} {} damage", 
                         if army == Army::Immune {"Immune"} else {"Infection"}, 
                         group_index + 1, i + 1, damage
@@ -279,7 +279,7 @@ fn attack_phase(
         for (from, to) in target_selections {
             reverse_target_selections.insert(*to, *from);
         }
-        if d {
+        if D {
             println!("");
             println!("Target Selections: {:?}", reverse_target_selections);
         }
@@ -295,7 +295,7 @@ fn attack_phase(
 
         attack_order.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap() );
         
-        if d {
+        if D {
             println!("");
             println!("{:?}", attack_order);
             println!("");
@@ -320,7 +320,7 @@ fn end_condition(immune_groups : &Vec<Group>, infection_groups : &Vec<Group>) ->
     immune_count == 0 || infection_count == 0
 }
 
-fn main() {
+pub fn main() {
     let mut buf = String::new();
     io::stdin().read_to_string(&mut buf).expect("Read input fails.");
 
@@ -336,16 +336,16 @@ fn main() {
     let mut infection_groups : Vec<Group> = lines_to_groups(infection_lines, Army::Infection);
     //println!("{:#?}", infection_groups);
     
-    if d2 {
+    if D2 {
         println!("");
         println!("Immune:");
-        for (i, group) in immune_groups.iter().enumerate() {
+        for (_i, group) in immune_groups.iter().enumerate() {
             //println!("Group {} contains {} units", i + 1, group.units);
             println!("{:#?}", group);
         }
         println!("");
         println!("Infection:");
-        for (i, group) in infection_groups.iter().enumerate() {
+        for (_i, group) in infection_groups.iter().enumerate() {
             //println!("Group {} contains {} units", i + 1, group.units);
             println!("{:#?}", group);
         }
@@ -368,7 +368,7 @@ fn main() {
     }
 
     let immune_count = immune_groups.iter().filter(|x| x.units > 0).collect::<Vec<&Group>>().len();
-    let infection_count = infection_groups.iter().filter(|x| x.units > 0).collect::<Vec<&Group>>().len();
+    let _infection_count = infection_groups.iter().filter(|x| x.units > 0).collect::<Vec<&Group>>().len();
     if immune_count == 0 {
         println!("Final remaining units: {}", infection_groups.iter().fold(0, |acc, x| acc + x.units));
     } else {
